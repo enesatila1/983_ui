@@ -1,7 +1,6 @@
 <template>
   <main>
     <LoginForm @login-success="handleLoginSuccess" />
-    <anan1/>
   </main>
 </template>
 

@@ -1,41 +1,84 @@
 <template>
-  <div class="login-container">
-    <div class="login-card">
-      <h1 class="login-title">Giriş Yap</h1>
+  <div class="login-wrapper">
+    <div class="login-box">
+      <div class="login-header">
+        <div class="logo-placeholder">
+          <span class="logo-icon">🔒</span>
+        </div>
+        <h1 class="login-title">Hoş Geldiniz</h1>
+        <p class="login-subtitle">Devam etmek için lütfen giriş yapın</p>
+      </div>
+
       <form @submit.prevent="handleSubmit" class="login-form">
-        <div class="form-group">
-          <label for="email">E-posta</label>
-          <input
-            id="email"
-            v-model="email"
-            type="email"
-            placeholder="örnek@eposta.com"
-            required
-            class="form-input"
-          />
+        <div class="form-field">
+          <label for="email">E-posta Adresi</label>
+          <div class="input-container">
+            <span class="input-icon">✉️</span>
+            <input
+              id="email"
+              v-model="email"
+              type="email"
+              placeholder="admin@admin.com"
+              required
+              class="form-input"
+              :class="{ 'has-error': error && !email }"
+            />
+          </div>
         </div>
         
-        <div class="form-group">
-          <label for="password">Şifre</label>
-          <input
-            id="password"
-            v-model="password"
-            type="password"
-            placeholder="••••••••"
-            required
-            class="form-input"
-          />
+        <div class="form-field">
+          <div class="label-row">
+            <label for="password">Şifre</label>
+            <a href="#" class="forgot-password">Şifremi Unuttum?</a>
+          </div>
+          <div class="input-container">
+            <span class="input-icon">🔑</span>
+            <input
+              id="password"
+              v-model="password"
+              type="password"
+              placeholder="••••••••"
+              required
+              class="form-input"
+              :class="{ 'has-error': error && !password }"
+            />
+          </div>
         </div>
 
-        <div v-if="error" class="error-message">
+        <div class="form-options">
+          <label class="remember-me">
+            <input type="checkbox" v-model="rememberMe" />
+            <span>Beni Hatırla</span>
+          </label>
+        </div>
+
+        <div v-show="error" class="error-box">
+          <span class="error-icon">⚠️</span>
           {{ error }}
         </div>
 
-        <button :disabled="isLoading" type="submit" class="login-button">
-          <span v-if="isLoading">Giriş yapılıyor...</span>
+        <button :disabled="isLoading" type="submit" class="submit-btn">
+          <span v-if="isLoading" class="loader"></span>
           <span v-else>Giriş Yap</span>
         </button>
+
+        <div class="divider">
+          <span>VEYA</span>
+        </div>
+
+        <div class="social-login">
+          <button type="button" class="social-btn google-btn">
+            <span class="social-icon">G</span> Google ile Giriş
+          </button>
+          <button type="button" class="social-btn github-btn">
+            <span class="social-icon">H</span> GitHub ile Giriş
+          </button>
+        </div>
       </form>
+
+      <div class="login-footer">
+        <p>Hesabınız yok mu? <a href="#" class="signup-link">Kayıt Ol</a></p>
+      </div>
     </div>
   </div>
 </template>
@@ -45,22 +88,30 @@ import { ref } from 'vue'
 
 const email = ref('')
 const password = ref('')
+const rememberMe = ref(false)
 const error = ref('')
 const isLoading = ref(false)
 
 const emit = defineEmits(['login-success', 'login-error'])
 
 const handleSubmit = async () => {
+  if (!email.value || !password.value) {
+    error.value = 'Lütfen tüm alanları doldurun.'
+    return
+  }
+
   error.value = ''
   isLoading.value = true
 
-  // Bu kısım simüle edilmiştir
   try {
-    // Burada servis çağrısı yapılabilir (örn: shared/services/auth)
-    console.log('Giriş bilgileri:', { email: email.value, password: password.value })
+    // API çağrısı simülasyonu
+    console.log('Giriş isteği:', { 
+      email: email.value, 
+      password: password.value, 
+      rememberMe: rememberMe.value 
+    })
     
-    // Simüle edilen bekleme süresi
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise(resolve => setTimeout(resolve, 1500))
 
     if (email.value === 'admin@admin.com' && password.value === '123456') {
       emit('login-success', { email: email.value })
@@ -69,7 +120,7 @@ const handleSubmit = async () => {
       emit('login-error', error.value)
     }
   } catch (err) {
-    error.value = 'Bir hata oluştu. Lütfen tekrar deneyin.'
+    error.value = 'Sunucuyla iletişim kurulamadı.'
   } finally {
     isLoading.value = false
   }
@@ -77,84 +128,259 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
-.login-container {
+.login-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f3f4f6;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 1rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-.login-card {
+.login-box {
   background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 2.5rem;
+  border-radius: 1.25rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
   width: 100%;
-  max-width: 400px;
+  max-width: 440px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.logo-placeholder {
+  width: 64px;
+  height: 64px;
+  background: #3b82f6;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.25rem;
+  color: white;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .login-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 2rem;
+  font-size: 1.75rem;
+  font-weight: 800;
   color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.login-subtitle {
+  color: #6b7280;
+  font-size: 0.9375rem;
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
-.form-group {
+.form-field {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.form-group label {
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-field label {
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
   color: #374151;
 }
 
-.form-input {
-  padding: 0.625rem;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
+.forgot-password, .signup-link {
+  font-size: 0.8125rem;
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.forgot-password:hover, .signup-link:hover {
+  text-decoration: underline;
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
   font-size: 1rem;
 }
 
-.form-input:focus {
-  outline: 2px solid #3b82f6;
-  border-color: transparent;
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.75rem;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 0.75rem;
+  font-size: 0.9375rem;
+  transition: all 0.2s;
+  background-color: #f9fafb;
 }
 
-.login-button {
+.form-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background-color: white;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.form-input.has-error {
+  border-color: #ef4444;
+}
+
+.form-options {
+  display: flex;
+  align-items: center;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+  cursor: pointer;
+}
+
+.remember-me input {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.error-box {
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  color: #b91c1c;
   padding: 0.75rem;
-  background-color: #3b82f6;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.submit-btn {
+  padding: 0.875rem;
+  background: #3b82f6;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(59, 130, 246, 0.2);
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(59, 130, 246, 0.25);
+}
+
+.submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submit-btn:disabled {
+  background: #93c5fd;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 0.5rem 0;
+}
+
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.divider span {
+  padding: 0 1rem;
+  color: #9ca3af;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.social-login {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 0.75rem;
+  background: white;
+  color: #374151;
+  font-size: 0.8125rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
 }
 
-.login-button:hover:not(:disabled) {
-  background-color: #2563eb;
+.social-btn:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
 }
 
-.login-button:disabled {
-  background-color: #93c5fd;
-  cursor: not-allowed;
-}
-
-.error-message {
-  color: #ef4444;
-  font-size: 0.875rem;
+.login-footer {
+  margin-top: 2rem;
   text-align: center;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.loader {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 </style>
