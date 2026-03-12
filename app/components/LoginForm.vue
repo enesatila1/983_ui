@@ -133,19 +133,23 @@ const handleSubmit = async () => {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+              url('https://images7.alphacoders.com/133/1338637.png');
+  background-size: cover;
+  background-position: center;
   padding: 1rem;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .login-box {
-  background: white;
+  background: rgba(255, 255, 255, 0.95);
   padding: 2.5rem;
   border-radius: 1.25rem;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
   width: 100%;
   max-width: 440px;
   animation: fadeIn 0.5s ease-out;
+  border: 2px solid #5d4037;
 }
 
 @keyframes fadeIn {
@@ -161,7 +165,7 @@ const handleSubmit = async () => {
 .logo-placeholder {
   width: 64px;
   height: 64px;
-  background: #3b82f6;
+  background: #5d4037;
   border-radius: 1rem;
   display: flex;
   align-items: center;
@@ -169,18 +173,18 @@ const handleSubmit = async () => {
   margin: 0 auto 1.25rem;
   color: white;
   font-size: 1.5rem;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 12px rgba(93, 64, 55, 0.3);
 }
 
 .login-title {
   font-size: 1.75rem;
   font-weight: 800;
-  color: #1f2937;
+  color: #3e2723;
   margin-bottom: 0.5rem;
 }
 
 .login-subtitle {
-  color: #6b7280;
+  color: #5d4037;
   font-size: 0.9375rem;
 }
 
@@ -205,18 +209,19 @@ const handleSubmit = async () => {
 .form-field label {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #374151;
+  color: #3e2723;
 }
 
 .forgot-password, .signup-link {
   font-size: 0.8125rem;
-  color: #3b82f6;
+  color: #795548;
   text-decoration: none;
   font-weight: 600;
 }
 
 .forgot-password:hover, .signup-link:hover {
   text-decoration: underline;
+  color: #3e2723;
 }
 
 .input-container {
@@ -234,18 +239,19 @@ const handleSubmit = async () => {
 .form-input {
   width: 100%;
   padding: 0.75rem 1rem 0.75rem 2.75rem;
-  border: 1.5px solid #e5e7eb;
+  border: 1.5px solid #d7ccc8;
   border-radius: 0.75rem;
   font-size: 0.9375rem;
   transition: all 0.2s;
-  background-color: #f9fafb;
+  background-color: #efebe9;
+  color: #3e2723;
 }
 
 .form-input:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: #5d4037;
   background-color: white;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 4px rgba(93, 64, 55, 0.1);
 }
 
 .form-input.has-error {
@@ -262,7 +268,7 @@ const handleSubmit = async () => {
   align-items: center;
   gap: 0.5rem;
   font-size: 0.875rem;
-  color: #4b5563;
+  color: #5d4037;
   cursor: pointer;
 }
 
@@ -274,9 +280,9 @@ const handleSubmit = async () => {
 }
 
 .error-box {
-  background-color: #fef2f2;
-  border: 1px solid #fee2e2;
-  color: #b91c1c;
+  background-color: #fbe9e7;
+  border: 1px solid #ffccbc;
+  color: #d84315;
   padding: 0.75rem;
   border-radius: 0.75rem;
   font-size: 0.875rem;
@@ -287,7 +293,7 @@ const handleSubmit = async () => {
 
 .submit-btn {
   padding: 0.875rem;
-  background: #3b82f6;
+  background: #5d4037;
   color: white;
   border: none;
   border-radius: 0.75rem;
@@ -298,13 +304,13 @@ const handleSubmit = async () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 4px 6px rgba(59, 130, 246, 0.2);
+  box-shadow: 0 4px 6px rgba(93, 64, 55, 0.2);
 }
 
 .submit-btn:hover:not(:disabled) {
-  background: #2563eb;
+  background: #4e342e;
   transform: translateY(-1px);
-  box-shadow: 0 6px 12px rgba(59, 130, 246, 0.25);
+  box-shadow: 0 6px 12px rgba(93, 64, 55, 0.25);
 }
 
 .submit-btn:active:not(:disabled) {
@@ -312,7 +318,7 @@ const handleSubmit = async () => {
 }
 
 .submit-btn:disabled {
-  background: #93c5fd;
+  background: #bcaaa4;
   cursor: not-allowed;
   box-shadow: none;
 }
@@ -327,12 +333,12 @@ const handleSubmit = async () => {
 .divider::before, .divider::after {
   content: '';
   flex: 1;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #d7ccc8;
 }
 
 .divider span {
   padding: 0 1rem;
-  color: #9ca3af;
+  color: #8d6e63;
   font-size: 0.75rem;
   font-weight: 600;
 }
@@ -349,10 +355,10 @@ const handleSubmit = async () => {
   justify-content: center;
   gap: 0.5rem;
   padding: 0.625rem;
-  border: 1.5px solid #e5e7eb;
+  border: 1.5px solid #d7ccc8;
   border-radius: 0.75rem;
   background: white;
-  color: #374151;
+  color: #3e2723;
   font-size: 0.8125rem;
   font-weight: 600;
   cursor: pointer;
@@ -360,15 +366,15 @@ const handleSubmit = async () => {
 }
 
 .social-btn:hover {
-  background: #f9fafb;
-  border-color: #d1d5db;
+  background: #efebe9;
+  border-color: #bcaaa4;
 }
 
 .login-footer {
   margin-top: 2rem;
   text-align: center;
   font-size: 0.875rem;
-  color: #6b7280;
+  color: #5d4037;
 }
 
 .loader {
