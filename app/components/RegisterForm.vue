@@ -1,15 +1,31 @@
 <template>
-  <div class="login-wrapper">
-    <div class="login-box">
-      <div class="login-header">
+  <div class="register-wrapper">
+    <div class="register-box">
+      <div class="register-header">
         <div class="logo-placeholder">
-          <span class="logo-icon">🔒</span>
+          <span class="logo-icon">📝</span>
         </div>
-        <h1 class="login-title">Hoş Geldiniz</h1>
-        <p class="login-subtitle">Devam etmek için lütfen giriş yapın</p>
+        <h1 class="register-title">Kayıt Ol</h1>
+        <p class="register-subtitle">Aramıza katılmak için formu doldurun</p>
       </div>
 
-      <form @submit.prevent="handleSubmit" class="login-form">
+      <form @submit.prevent="handleSubmit" class="register-form">
+        <div class="form-field">
+          <label for="fullName">Ad Soyad</label>
+          <div class="input-container">
+            <span class="input-icon">👤</span>
+            <input
+              id="fullName"
+              v-model="fullName"
+              type="text"
+              placeholder="Adınız Soyadınız"
+              required
+              class="form-input"
+              :class="{ 'has-error': error && !fullName }"
+            />
+          </div>
+        </div>
+
         <div class="form-field">
           <label for="email">E-posta Adresi</label>
           <div class="input-container">
@@ -18,7 +34,7 @@
               id="email"
               v-model="email"
               type="email"
-              placeholder="admin@admin.com"
+              placeholder="örnek@eposta.com"
               required
               class="form-input"
               :class="{ 'has-error': error && !email }"
@@ -27,10 +43,7 @@
         </div>
         
         <div class="form-field">
-          <div class="label-row">
-            <label for="password">Şifre</label>
-            <a href="#" class="forgot-password">Şifremi Unuttum?</a>
-          </div>
+          <label for="password">Şifre</label>
           <div class="input-container">
             <span class="input-icon">🔑</span>
             <input
@@ -45,11 +58,20 @@
           </div>
         </div>
 
-        <div class="form-options">
-          <label class="remember-me">
-            <input type="checkbox" v-model="rememberMe" />
-            <span>Beni Hatırla</span>
-          </label>
+        <div class="form-field">
+          <label for="confirmPassword">Şifre Tekrar</label>
+          <div class="input-container">
+            <span class="input-icon">🔒</span>
+            <input
+              id="confirmPassword"
+              v-model="confirmPassword"
+              type="password"
+              placeholder="••••••••"
+              required
+              class="form-input"
+              :class="{ 'has-error': error && (password !== confirmPassword) }"
+            />
+          </div>
         </div>
 
         <div v-show="error" class="error-box">
@@ -59,7 +81,7 @@
 
         <button :disabled="isLoading" type="submit" class="submit-btn">
           <span v-if="isLoading" class="loader"></span>
-          <span v-else>Giriş Yap</span>
+          <span v-else>Kayıt Ol</span>
         </button>
 
         <div class="divider">
@@ -68,16 +90,16 @@
 
         <div class="social-login">
           <button type="button" class="social-btn google-btn">
-            <span class="social-icon">G</span> Google ile Giriş
+            <span class="social-icon">G</span> Google ile Kayıt
           </button>
           <button type="button" class="social-btn github-btn">
-            <span class="social-icon">H</span> GitHub ile Giriş
+            <span class="social-icon">H</span> GitHub ile Kayıt
           </button>
         </div>
       </form>
 
-      <div class="login-footer">
-        <p>Hesabınız yok mu? <NuxtLink to="/register" class="signup-link">Kayıt Ol</NuxtLink></p>
+      <div class="register-footer">
+        <p>Zaten hesabınız var mı? <NuxtLink to="/" class="login-link">Giriş Yap</NuxtLink></p>
       </div>
     </div>
   </div>
@@ -86,17 +108,23 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+const fullName = ref('')
 const email = ref('')
 const password = ref('')
-const rememberMe = ref(false)
+const confirmPassword = ref('')
 const error = ref('')
 const isLoading = ref(false)
 
-const emit = defineEmits(['login-success', 'login-error'])
+const emit = defineEmits(['register-success', 'register-error'])
 
 const handleSubmit = async () => {
-  if (!email.value || !password.value) {
+  if (!fullName.value || !email.value || !password.value || !confirmPassword.value) {
     error.value = 'Lütfen tüm alanları doldurun.'
+    return
+  }
+
+  if (password.value !== confirmPassword.value) {
+    error.value = 'Şifreler eşleşmiyor.'
     return
   }
 
@@ -105,22 +133,18 @@ const handleSubmit = async () => {
 
   try {
     // API çağrısı simülasyonu
-    console.log('Giriş isteği:', { 
+    console.log('Kayıt isteği:', { 
+      fullName: fullName.value,
       email: email.value, 
-      password: password.value, 
-      rememberMe: rememberMe.value 
+      password: password.value
     })
     
     await new Promise(resolve => setTimeout(resolve, 1500))
 
-    if (email.value === 'admin@admin.com' && password.value === '123456') {
-      emit('login-success', { email: email.value })
-    } else {
-      error.value = 'E-posta veya şifre hatalı!'
-      emit('login-error', error.value)
-    }
+    emit('register-success', { email: email.value, fullName: fullName.value })
   } catch (err) {
     error.value = 'Sunucuyla iletişim kurulamadı.'
+    emit('register-error', error.value)
   } finally {
     isLoading.value = false
   }
@@ -128,7 +152,7 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
-.login-wrapper {
+.register-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -138,7 +162,7 @@ const handleSubmit = async () => {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-.login-box {
+.register-box {
   background: white;
   padding: 2.5rem;
   border-radius: 1.25rem;
@@ -153,7 +177,7 @@ const handleSubmit = async () => {
   to { opacity: 1; transform: translateY(0); }
 }
 
-.login-header {
+.register-header {
   text-align: center;
   margin-bottom: 2rem;
 }
@@ -161,7 +185,7 @@ const handleSubmit = async () => {
 .logo-placeholder {
   width: 64px;
   height: 64px;
-  background: #3b82f6;
+  background: #10b981;
   border-radius: 1rem;
   display: flex;
   align-items: center;
@@ -169,22 +193,22 @@ const handleSubmit = async () => {
   margin: 0 auto 1.25rem;
   color: white;
   font-size: 1.5rem;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
-.login-title {
+.register-title {
   font-size: 1.75rem;
   font-weight: 800;
   color: #1f2937;
   margin-bottom: 0.5rem;
 }
 
-.login-subtitle {
+.register-subtitle {
   color: #6b7280;
   font-size: 0.9375rem;
 }
 
-.login-form {
+.register-form {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
@@ -196,26 +220,20 @@ const handleSubmit = async () => {
   gap: 0.5rem;
 }
 
-.label-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .form-field label {
   font-size: 0.875rem;
   font-weight: 600;
   color: #374151;
 }
 
-.forgot-password, .signup-link {
+.login-link {
   font-size: 0.8125rem;
-  color: #3b82f6;
+  color: #10b981;
   text-decoration: none;
   font-weight: 600;
 }
 
-.forgot-password:hover, .signup-link:hover {
+.login-link:hover {
   text-decoration: underline;
 }
 
@@ -243,34 +261,13 @@ const handleSubmit = async () => {
 
 .form-input:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: #10b981;
   background-color: white;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
 }
 
 .form-input.has-error {
   border-color: #ef4444;
-}
-
-.form-options {
-  display: flex;
-  align-items: center;
-}
-
-.remember-me {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-  color: #4b5563;
-  cursor: pointer;
-}
-
-.remember-me input {
-  width: 16px;
-  height: 16px;
-  border-radius: 4px;
-  cursor: pointer;
 }
 
 .error-box {
@@ -287,7 +284,7 @@ const handleSubmit = async () => {
 
 .submit-btn {
   padding: 0.875rem;
-  background: #3b82f6;
+  background: #10b981;
   color: white;
   border: none;
   border-radius: 0.75rem;
@@ -298,13 +295,13 @@ const handleSubmit = async () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 4px 6px rgba(59, 130, 246, 0.2);
+  box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
 }
 
 .submit-btn:hover:not(:disabled) {
-  background: #2563eb;
+  background: #059669;
   transform: translateY(-1px);
-  box-shadow: 0 6px 12px rgba(59, 130, 246, 0.25);
+  box-shadow: 0 6px 12px rgba(16, 185, 129, 0.25);
 }
 
 .submit-btn:active:not(:disabled) {
@@ -312,7 +309,7 @@ const handleSubmit = async () => {
 }
 
 .submit-btn:disabled {
-  background: #93c5fd;
+  background: #a7f3d0;
   cursor: not-allowed;
   box-shadow: none;
 }
@@ -364,7 +361,7 @@ const handleSubmit = async () => {
   border-color: #d1d5db;
 }
 
-.login-footer {
+.register-footer {
   margin-top: 2rem;
   text-align: center;
   font-size: 0.875rem;
